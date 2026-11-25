@@ -13,18 +13,17 @@ import random
 import threading
 import paho.mqtt.client as mqtt
 
-# ================= KONFIGURASI =================
 NIM = "2410020167"
 
-MQTT_BROKER = "localhost"  # Mosquitto lokal
+MQTT_BROKER = "localhost"  
 MQTT_PORT = 1883
 MQTT_CLIENT_ID = f"PythonDevice-{NIM}"
 
 TOPIC_SUHU = f"iot/{NIM}/sensor/suhu"
 TOPIC_RELAY = f"iot/{NIM}/aktuator/relay"
 TOPIC_PWM = f"iot/{NIM}/aktuator/pwm"
-TOPIC_STATUS_RELAY = f"iot/{NIM}/status/relay"  # feedback status relay
-TOPIC_STATUS_PWM = f"iot/{NIM}/status/pwm"      # feedback nilai PWM
+TOPIC_STATUS_RELAY = f"iot/{NIM}/status/relay"  
+TOPIC_STATUS_PWM = f"iot/{NIM}/status/pwm"     
 
 PIN_RELAY = 26  # GPIO 26 -> relay
 PIN_LED = 2     # GPIO 2  -> LED (PWM)
