@@ -1,0 +1,316 @@
+[
+  {
+    "id": "tab_proyek",
+    "type": "tab",
+    "label": "Proyek Mini - Relay & PWM (2410020167)",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "broker_proyek",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Proyek Mini",
+    "broker": "localhost",
+    "port": "1883",
+    "clientid": "NodeRED-ProyekMini-2410020167",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true
+  },
+  {
+    "id": "c1",
+    "type": "comment",
+    "z": "tab_proyek",
+    "name": "1. Monitoring suhu (DHT22)",
+    "info": "",
+    "x": 190,
+    "y": 60,
+    "wires": []
+  },
+  {
+    "id": "pm_in_suhu",
+    "type": "mqtt in",
+    "z": "tab_proyek",
+    "name": "Suhu DHT22",
+    "topic": "iot/2410020167/sensor/suhu",
+    "qos": "0",
+    "datatype": "auto",
+    "broker": "broker_proyek",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "pm_parse_suhu"
+      ]
+    ]
+  },
+  {
+    "id": "pm_parse_suhu",
+    "type": "function",
+    "z": "tab_proyek",
+    "name": "Parse Float",
+    "func": "msg.payload = parseFloat(msg.payload);\nreturn msg;",
+    "outputs": 1,
+    "timeout": 0,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 380,
+    "y": 100,
+    "wires": [
+      [
+        "pm_gauge_suhu"
+      ]
+    ]
+  },
+  {
+    "id": "pm_gauge_suhu",
+    "type": "ui_gauge",
+    "z": "tab_proyek",
+    "name": "Gauge Suhu",
+    "group": "pm_grp_monitoring",
+    "order": 1,
+    "width": "6",
+    "height": "4",
+    "gtype": "gage",
+    "title": "Suhu (°C)",
+    "label": "°C",
+    "format": "{{value}}",
+    "min": 0,
+    "max": 50,
+    "colors": [
+      "#00b500",
+      "#e6e600",
+      "#ca3838"
+    ],
+    "seg1": "",
+    "seg2": "",
+    "x": 610,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "c2",
+    "type": "comment",
+    "z": "tab_proyek",
+    "name": "2. Kontrol relay (GPIO 26)",
+    "info": "",
+    "x": 190,
+    "y": 180,
+    "wires": []
+  },
+  {
+    "id": "pm_switch_relay",
+    "type": "ui_switch",
+    "z": "tab_proyek",
+    "name": "Switch Relay",
+    "label": "Relay",
+    "tooltip": "ON/OFF relay (GPIO 26)",
+    "group": "pm_grp_kontrol",
+    "order": 1,
+    "width": "6",
+    "height": "1",
+    "passthru": false,
+    "decouple": "false",
+    "topic": "iot/2410020167/aktuator/relay",
+    "topicType": "str",
+    "style": "",
+    "onvalue": "ON",
+    "onvalueType": "str",
+    "onicon": "",
+    "oncolor": "",
+    "offvalue": "OFF",
+    "offvalueType": "str",
+    "officon": "",
+    "offcolor": "",
+    "x": 160,
+    "y": 220,
+    "wires": [
+      [
+        "pm_out_relay"
+      ]
+    ]
+  },
+  {
+    "id": "pm_out_relay",
+    "type": "mqtt out",
+    "z": "tab_proyek",
+    "name": "Perintah Relay",
+    "topic": "",
+    "qos": "0",
+    "retain": "false",
+    "broker": "broker_proyek",
+    "x": 400,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "c3",
+    "type": "comment",
+    "z": "tab_proyek",
+    "name": "3. Slider PWM 0-255 (LED GPIO 2)",
+    "info": "",
+    "x": 210,
+    "y": 300,
+    "wires": []
+  },
+  {
+    "id": "pm_slider_pwm",
+    "type": "ui_slider",
+    "z": "tab_proyek",
+    "name": "Slider PWM",
+    "label": "PWM LED (0-255)",
+    "tooltip": "Kecerahan LED (GPIO 2)",
+    "group": "pm_grp_kontrol",
+    "order": 2,
+    "width": "6",
+    "height": "1",
+    "passthru": false,
+    "outs": "end",
+    "topic": "iot/2410020167/aktuator/pwm",
+    "topicType": "str",
+    "min": 0,
+    "max": 255,
+    "step": 1,
+    "x": 160,
+    "y": 340,
+    "wires": [
+      [
+        "pm_out_pwm"
+      ]
+    ]
+  },
+  {
+    "id": "pm_out_pwm",
+    "type": "mqtt out",
+    "z": "tab_proyek",
+    "name": "Perintah PWM",
+    "topic": "",
+    "qos": "0",
+    "retain": "false",
+    "broker": "broker_proyek",
+    "x": 400,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "c4",
+    "type": "comment",
+    "z": "tab_proyek",
+    "name": "4. Feedback status dari perangkat",
+    "info": "",
+    "x": 210,
+    "y": 420,
+    "wires": []
+  },
+  {
+    "id": "pm_in_st_relay",
+    "type": "mqtt in",
+    "z": "tab_proyek",
+    "name": "Status Relay (feedback)",
+    "topic": "iot/2410020167/status/relay",
+    "qos": "0",
+    "datatype": "auto",
+    "broker": "broker_proyek",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 190,
+    "y": 460,
+    "wires": [
+      [
+        "pm_text_relay"
+      ]
+    ]
+  },
+  {
+    "id": "pm_text_relay",
+    "type": "ui_text",
+    "z": "tab_proyek",
+    "name": "Status Relay",
+    "group": "pm_grp_kontrol",
+    "order": 3,
+    "width": "6",
+    "height": "1",
+    "label": "Status Relay",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "x": 440,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "pm_in_st_pwm",
+    "type": "mqtt in",
+    "z": "tab_proyek",
+    "name": "Status PWM (feedback)",
+    "topic": "iot/2410020167/status/pwm",
+    "qos": "0",
+    "datatype": "auto",
+    "broker": "broker_proyek",
+    "nl": false,
+    "rap": true,
+    "rh": 0,
+    "inputs": 0,
+    "x": 190,
+    "y": 520,
+    "wires": [
+      [
+        "pm_text_pwm"
+      ]
+    ]
+  },
+  {
+    "id": "pm_text_pwm",
+    "type": "ui_text",
+    "z": "tab_proyek",
+    "name": "Status PWM",
+    "group": "pm_grp_kontrol",
+    "order": 4,
+    "width": "6",
+    "height": "1",
+    "label": "Nilai PWM",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "x": 440,
+    "y": 520,
+    "wires": []
+  },
+  {
+    "id": "pm_grp_monitoring",
+    "type": "ui_group",
+    "name": "Monitoring",
+    "tab": "pm_tab_dashboard",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "pm_grp_kontrol",
+    "type": "ui_group",
+    "name": "Kontrol",
+    "tab": "pm_tab_dashboard",
+    "order": 2,
+    "disp": true,
+    "width": "6",
+    "collapse": false
+  },
+  {
+    "id": "pm_tab_dashboard",
+    "type": "ui_tab",
+    "name": "Proyek Mini",
+    "icon": "dashboard",
+    "order": 2,
+    "disabled": false,
+    "hidden": false
+  }
+]
